@@ -1,0 +1,40 @@
+# Base Image ##################################################################
+FROM arm32v7/debian:buster-slim as base
+
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends librtlsdr0 libusb-1.0-0 && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+
+# Builder Image ###############################################################
+FROM base as builder
+
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates coreutils make gcc pkg-config librtlsdr-dev libusb-dev
+
+
+ARG DUMP1090_VERSION
+ARG DUMP1090_GIT_HASH
+ARG DUMP1090_TAR_HASH
+
+
+RUN curl -L --output 'dump1090-mutability.tar.gz' "https://github.com/mutability/dump1090/archive/${DUMP1090_GIT_HASH}.tar.gz" && \
+    sha256sum dump1090-mutability.tar.gz && echo "${DUMP1090_TAR_HASH}  dump1090-mutability.tar.gz" | sha256sum -c
+RUN mkdir dump1090 && cd dump1090 && \
+    tar -xvf ../dump1090-mutability.tar.gz --strip-components=1
+WORKDIR dump1090
+RUN make DUMP1090_VERSION="${DUMP1090_VERSION}"
+RUN make test
+
+
+# Final Image #################################################################
+FROM base
+LABEL maintainer="thebigguy.co.uk@gmail.com"
+
+COPY --from=builder /dump1090/dump1090 /usr/local/bin/dump1090
+
+# Raw output
+EXPOSE 30002
+# Beast output
+EXPOSE 30005
+
+ENTRYPOINT ["dump1090", "--net", "--net-bind-address", "0.0.0.0", "--debug", "n", "--mlat", "--net-heartbeat", "5"]

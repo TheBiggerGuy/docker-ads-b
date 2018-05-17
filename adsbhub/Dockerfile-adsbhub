@@ -1,0 +1,8 @@
+FROM alpine:3.7
+
+LABEL maintainer="thebigguy.co.uk@gmail.com"
+
+RUN apk add --no-cache socat iputils
+
+COPY adsbhub-client.sh /usr/local/bin/adsbhub-client
+ENTRYPOINT ["adsbhub-client"]

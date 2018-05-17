@@ -1,0 +1,8 @@
+FROM alpine:3.7
+
+LABEL maintainer="thebigguy.co.uk@gmail.com"
+
+RUN apk add --no-cache socat iputils
+
+COPY adsbexchange-client.sh /usr/local/bin/adsbexchange-client
+ENTRYPOINT ["adsbexchange-client"]

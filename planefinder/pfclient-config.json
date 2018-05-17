@@ -1,0 +1,14 @@
+{
+  "connection_type": "1",
+  "data_format": "1",
+  "tcp_address": "DUMP1090_SERVER",
+  "tcp_port": "DUMP1090_PORT",
+
+  "data_upload_interval": "10",
+  "aircraft_timeout": "30",
+  "select_timeout": "10",
+
+  "sharecode": "PLANEFINDER_SHARECODE",
+  "latitude": "PLANEFINDER_LATITUDE",
+  "longitude": "PLANEFINDER_LONGITUDE"
+}

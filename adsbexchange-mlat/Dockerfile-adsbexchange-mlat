@@ -1,0 +1,25 @@
+FROM alpine:3.7 as base
+LABEL maintainer="thebigguy.co.uk@gmail.com"
+
+RUN apk add --no-cache python3
+
+FROM base as builder
+
+RUN apk add --no-cache curl ca-certificates python3-dev gcc libc-dev
+RUN pip3 install shiv
+
+ARG MLAT_CLIENT_VERSION
+ARG MLAT_CLIENT_HASH
+
+RUN curl --output mlat-client.tar.gz -L "https://github.com/TheBiggerGuy/mlat-client/archive/${MLAT_CLIENT_VERSION}.tar.gz" && \
+    sha256sum mlat-client.tar.gz && echo "${MLAT_CLIENT_HASH}  mlat-client.tar.gz" | sha256sum -c
+run shiv -c mlat-client -o /usr/local/bin/mlat-client /mlat-client.tar.gz
+
+FROM base
+
+COPY --from=builder /usr/local/bin/mlat-client /usr/local/bin/mlat-client
+COPY mlat-client-runner.sh /usr/bin/mlat-client-runner
+
+EXPOSE 30104
+
+ENTRYPOINT ["mlat-client-runner"]
