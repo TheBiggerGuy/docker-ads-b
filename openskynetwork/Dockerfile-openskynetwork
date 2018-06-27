@@ -1,0 +1,11 @@
+FROM alpine:3.7
+
+LABEL maintainer="thebigguy.co.uk@gmail.com"
+
+RUN apk add --no-cache socat iputils
+
+COPY openskynetwork-client.sh /usr/local/bin/openskynetwork-client
+
+EXPOSE 30005/tcp
+
+ENTRYPOINT ["openskynetwork-client"]

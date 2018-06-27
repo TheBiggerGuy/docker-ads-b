@@ -19,7 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certifi
 COPY fr24feed.ini /etc/fr24feed.ini
 COPY fr24feed-runner.sh /usr/bin/fr24feed-runner
 
-EXPOSE 8754
+EXPOSE 8754/tcp
 
 HEALTHCHECK --interval=5m --timeout=3s CMD curl --fail http://localhost:8754/ || exit 1
 

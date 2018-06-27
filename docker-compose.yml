@@ -12,8 +12,8 @@ services:
         DUMP1090_GIT_HASH: fb5942dba6505a21cbafc7905a5a7c513b214dc9
         DUMP1090_TAR_HASH: cbdd9ac6d930c0bde65aefa74a07e045d2ebf1debed49f0d3ff8c9d349ce00f8
     #ports:
-    #  - "30002:30002"
-    #  - "30005:30005"
+    #  - "30002:30002/tcp"
+    #  - "30005:30005/tcp"
     devices:
       - "/dev/bus/usb/001/007"
     deploy:
@@ -35,7 +35,7 @@ services:
         FR24FEED_VERSION: 1.0.19-15
         FR24FEED_HASH: ea2674b5eaa071d3e469a103971a2d42973014d5fde8fd3b0fe123dbd4f1476b
     ports:
-      - "8754:8754"
+      - "8754:8754/tcp"
     depends_on:
       - dump1090
     env_file:
@@ -56,7 +56,7 @@ services:
         PFCLIENT_VERSION: 4.1.1
         PFCLIENT_HASH: c2411ca2c9ce1a6a00c1c8af0ce3f7f9
     ports:
-      - "30053:30053"
+      - "30053:30053/tcp"
     depends_on:
       - dump1090
     env_file:
@@ -92,7 +92,7 @@ services:
         MLAT_CLIENT_VERSION: c604f5c9bc5207464f95015c7f97a94f24076d69
         MLAT_CLIENT_HASH: 4feb73414bd85f051320394d290101290760995dacae936a03a4c208560bc73c
     ports:
-      - "30104:30104"
+      - "30104:30104/tcp"
     depends_on:
       - dump1090
     env_file:
@@ -108,6 +108,21 @@ services:
     build:
       context: adsbhub
       dockerfile: Dockerfile-adsbhub
+    depends_on:
+      - dump1090
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+
+  # openskynetwork ############################################################
+  openskynetwork:
+    image: thebiggerguy/docker-ads-b-openskynetwork
+    build:
+      context: openskynetwork
+      dockerfile: Dockerfile-openskynetwork
+    ports:
+      - "30975:30005/tcp"
     depends_on:
       - dump1090
     deploy:
