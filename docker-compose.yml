@@ -22,7 +22,7 @@ services:
         constraints:
           - node.hostname == shed
       restart_policy:
-        condition: on-failure
+        condition: always
         delay: 5s
 
   # flightradar24 #############################################################
@@ -43,7 +43,7 @@ services:
     deploy:
       mode: global
       restart_policy:
-        condition: on-failure
+        condition: always
         delay: 5s
   
   # planefinder ###############################################################
@@ -64,7 +64,7 @@ services:
     deploy:
       mode: global
       restart_policy:
-        condition: on-failure
+        condition: always
         delay: 5s
 
   # adsbexchange ##############################################################
@@ -79,7 +79,7 @@ services:
       - variables-adsbexchange.env
     deploy:
       restart_policy:
-        condition: on-failure
+        condition: always
         delay: 5s
 
   # adsbexchange-mlat #########################################################
@@ -99,7 +99,7 @@ services:
       - variables-adsbexchange-mlat.env
     deploy:
       restart_policy:
-        condition: on-failure
+        condition: always
         delay: 5s
 
   # adsbhub ###################################################################
@@ -112,7 +112,7 @@ services:
       - dump1090
     deploy:
       restart_policy:
-        condition: on-failure
+        condition: always
         delay: 5s
 
   # openskynetwork ############################################################
@@ -127,5 +127,5 @@ services:
       - dump1090
     deploy:
       restart_policy:
-        condition: on-failure
+        condition: always
         delay: 5s
