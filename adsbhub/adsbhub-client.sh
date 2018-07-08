@@ -21,7 +21,7 @@ while true; do
   echo "Starting replay from TCP:${DUMP1090_SERVER}:${DUMP1090_PORT} to TCP:data.adsbhub.org:5001"
   
   set +o errexit
-  socat -u "TCP:${DUMP1090_SERVER}:${DUMP1090_PORT}" "TCP:data.adsbhub.org:5001"
+  socat -d -d -u "TCP:${DUMP1090_SERVER}:${DUMP1090_PORT}" 'TCP:data.adsbhub.org:5001'
   SOCAT_STATUS=${?}
   set -o errexit
   
