@@ -3,7 +3,7 @@ version: '3.6'
 services:
   # dump1090 ##################################################################
   dump1090:
-    image: thebiggerguy/docker-ads-b-dump1090
+    image: thebiggerguy/docker-ads-b-dump1090:${TAG:-latest}
     build:
       context: dump1090
       dockerfile: Dockerfile-dump1090
@@ -27,7 +27,7 @@ services:
 
   # flightradar24 #############################################################
   flightradar24:
-    image: thebiggerguy/docker-ads-b-flightradar24
+    image: thebiggerguy/docker-ads-b-flightradar24:${TAG:-latest}
     build:
       context: flightradar24
       dockerfile: Dockerfile-flightradar24
@@ -48,7 +48,7 @@ services:
   
   # planefinder ###############################################################
   planefinder:
-    image: thebiggerguy/docker-ads-b-planefinder
+    image: thebiggerguy/docker-ads-b-planefinder:${TAG:-latest}
     build:
       context: planefinder
       dockerfile: Dockerfile-planefinder
@@ -69,7 +69,7 @@ services:
 
   # adsbexchange ##############################################################
   adsbexchange:
-    image: thebiggerguy/docker-ads-b-adsbexchange
+    image: thebiggerguy/docker-ads-b-adsbexchange:${TAG:-latest}
     build:
       context: adsbexchange
       dockerfile: Dockerfile-adsbexchange
@@ -84,7 +84,7 @@ services:
 
   # adsbexchange-mlat #########################################################
   adsbexchange-mlat:
-    image: thebiggerguy/docker-ads-b-adsbexchange-mlat
+    image: thebiggerguy/docker-ads-b-adsbexchange-mlat:${TAG:-latest}
     build:
       context: adsbexchange-mlat
       dockerfile: Dockerfile-adsbexchange-mlat
@@ -104,7 +104,7 @@ services:
 
   # adsbhub ###################################################################
   adsbhub:
-    image: thebiggerguy/docker-ads-b-adsbhub
+    image: thebiggerguy/docker-ads-b-adsbhub:${TAG:-latest}
     build:
       context: adsbhub
       dockerfile: Dockerfile-adsbhub
@@ -117,7 +117,7 @@ services:
 
   # openskynetwork ############################################################
   openskynetwork:
-    image: thebiggerguy/docker-ads-b-openskynetwork
+    image: thebiggerguy/docker-ads-b-openskynetwork:${TAG:-latest}
     build:
       context: openskynetwork
       dockerfile: Dockerfile-openskynetwork

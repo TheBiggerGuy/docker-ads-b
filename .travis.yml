@@ -1,0 +1,39 @@
+sudo: required
+
+services:
+  - docker
+
+env:
+  - DOCKER_COMPOSE_VERSION=1.21.2
+
+before_install:
+  # exit on error
+  - set -o errexit
+  - set -o pipefail
+  
+  # Update Docker
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  
+  # Pull images to help with cache
+  - docker pull thebiggerguy/docker-ads-b-dump1090
+  - docker pull thebiggerguy/docker-ads-b-adsbexchange
+  - docker pull thebiggerguy/docker-ads-b-adsbexchange-mlat
+  - docker pull thebiggerguy/docker-ads-b-adsbhub
+  - docker pull thebiggerguy/docker-ads-b-flightradar24
+  - docker pull thebiggerguy/docker-ads-b-openskynetwork
+  - docker pull thebiggerguy/docker-ads-b-planefinder
+  
+  # setup QEMU
+  - docker run --rm --privileged multiarch/qemu-user-static:register
+  - curl -L --output 'qemu-arm-static' https://github.com/multiarch/qemu-user-static/releases/download/v2.12.0/qemu-arm-static
+  - echo "c34e328f6eeb64b3ec1d30def308d061050824cf01d65e919c25ddfa17795dea  qemu-arm-static" | sha256sum -c
+
+script:
+  - TAG="${TRAVIS_BRANCH}" docker-compose build --build-arg VCS_REF=$(git rev-parse --short HEAD)
+
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker-compose push
