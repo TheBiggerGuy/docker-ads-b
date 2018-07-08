@@ -1,6 +1,12 @@
 # Docker ADS-B
 Docker container for ADS-B
 
+| dump1090 |
+|----------|
+| [![](https://images.microbadger.com/badges/image/thebiggerguy/docker-ads-b-dump1090.svg)](https://microbadger.com/images/thebiggerguy/docker-ads-b-dump1090 "Get your own image badge on microbadger.com") |
+| [![](https://images.microbadger.com/badges/version/thebiggerguy/docker-ads-b-dump1090.svg)](https://microbadger.com/images/thebiggerguy/docker-ads-b-dump1090 "Get your own version badge on microbadger.com") |
+| [![](https://images.microbadger.com/badges/version/thebiggerguy/docker-ads-b-dump1090.svg)](https://microbadger.com/images/thebiggerguy/docker-ads-b-dump1090 "Get your own version badge on microbadger.com")
+
 # How to use
 ## Edit variables
 Edit the 'variables' files with the required keys and locations for each of the services
