@@ -20,6 +20,6 @@ COPY pfclient-config.json /etc/pfclient-config.json
 
 EXPOSE 30053
 
-HEALTHCHECK --interval=5m --timeout=3s CMD curl --fail http://localhost:30053/ || exit 1
+HEALTHCHECK --start-period=1m --interval=30s --timeout=5s --retries=3 CMD curl --fail http://localhost:30053/ || exit 1
 
 ENTRYPOINT ["pfclient-runner"]
