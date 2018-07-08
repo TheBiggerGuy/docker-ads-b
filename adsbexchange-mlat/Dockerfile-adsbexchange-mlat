@@ -5,7 +5,7 @@ RUN apk add --no-cache python3
 FROM base as builder
 
 RUN apk add --no-cache curl ca-certificates python3-dev gcc libc-dev
-RUN pip3 install shiv
+RUN pip3 install --upgrade shiv importlib-resources==0.8
 
 ARG MLAT_CLIENT_VERSION
 ARG MLAT_CLIENT_HASH
