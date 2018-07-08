@@ -35,7 +35,6 @@ RUN make test
 
 # Final Image #################################################################
 FROM base
-LABEL maintainer="thebigguy.co.uk@gmail.com"
 
 COPY --from=builder /dump1090/dump1090 /usr/local/bin/dump1090
 
@@ -45,3 +44,13 @@ EXPOSE 30002/tcp
 EXPOSE 30005/tcp
 
 ENTRYPOINT ["tini", "--", "dump1090", "--net", "--net-bind-address", "0.0.0.0", "--debug", "n", "--mlat", "--net-heartbeat", "5"]
+
+# Metadata
+ARG VCS_REF="Unknown"
+LABEL maintainer="thebigguy.co.uk@gmail.com" \
+      org.label-schema.name="Docker ADS-B - dump1090" \
+      org.label-schema.description="Docker container for ADS-B - This is the dump1090 component" \
+      org.label-schema.url="https://github.com/TheBiggerGuy/docker-ads-b" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
+      org.label-schema.vcs-url="https://github.com/TheBiggerGuy/docker-ads-b" \
+      org.label-schema.schema-version="1.0"

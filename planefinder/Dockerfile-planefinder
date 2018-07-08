@@ -1,7 +1,5 @@
 FROM arm32v7/debian:buster-slim
 
-LABEL maintainer="thebigguy.co.uk@gmail.com"
-
 ARG PFCLIENT_VERSION
 ARG PFCLIENT_HASH
 
@@ -23,3 +21,13 @@ EXPOSE 30053
 HEALTHCHECK --start-period=1m --interval=30s --timeout=5s --retries=3 CMD curl --fail http://localhost:30053/ || exit 1
 
 ENTRYPOINT ["pfclient-runner"]
+
+# Metadata
+ARG VCS_REF="Unknown"
+LABEL maintainer="thebigguy.co.uk@gmail.com" \
+      org.label-schema.name="Docker ADS-B - planefinder" \
+      org.label-schema.description="Docker container for ADS-B - This is the planefinder.net component" \
+      org.label-schema.url="https://github.com/TheBiggerGuy/docker-ads-b" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
+      org.label-schema.vcs-url="https://github.com/TheBiggerGuy/docker-ads-b" \
+      org.label-schema.schema-version="1.0"
