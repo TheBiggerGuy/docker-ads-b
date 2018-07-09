@@ -7,6 +7,9 @@ services:
     build:
       context: dump1090
       dockerfile: Dockerfile-dump1090
+      cache_from:
+        - thebiggerguy/docker-ads-b-dump1090
+        - thebiggerguy/docker-ads-b-dump1090:${TAG:-latest}
       args:
         DUMP1090_VERSION: git-fb5942d
         DUMP1090_GIT_HASH: fb5942dba6505a21cbafc7905a5a7c513b214dc9
@@ -31,6 +34,9 @@ services:
     build:
       context: flightradar24
       dockerfile: Dockerfile-flightradar24
+      cache_from:
+        - thebiggerguy/docker-ads-b-flightradar24
+        - thebiggerguy/docker-ads-b-flightradar24:${TAG:-latest}
       args:
         FR24FEED_VERSION: 1.0.19-15
         FR24FEED_HASH: ea2674b5eaa071d3e469a103971a2d42973014d5fde8fd3b0fe123dbd4f1476b
@@ -52,6 +58,9 @@ services:
     build:
       context: planefinder
       dockerfile: Dockerfile-planefinder
+        cache_from:
+          - thebiggerguy/docker-ads-b-planefinder
+          - thebiggerguy/docker-ads-b-planefinder:${TAG:-latest}
       args:
         PFCLIENT_VERSION: 4.1.1
         PFCLIENT_HASH: c2411ca2c9ce1a6a00c1c8af0ce3f7f9
@@ -73,6 +82,9 @@ services:
     build:
       context: adsbexchange
       dockerfile: Dockerfile-adsbexchange
+      cache_from:
+        - thebiggerguy/docker-ads-b-adsbexchange
+        - thebiggerguy/docker-ads-b-adsbexchange:${TAG:-latest}
     depends_on:
       - dump1090
     env_file:
@@ -88,6 +100,9 @@ services:
     build:
       context: adsbexchange-mlat
       dockerfile: Dockerfile-adsbexchange-mlat
+      cache_from:
+        - thebiggerguy/docker-ads-b-adsbexchange-mlat
+        - thebiggerguy/docker-ads-b-adsbexchange-mlat:${TAG:-latest}
       args:
         MLAT_CLIENT_VERSION: c604f5c9bc5207464f95015c7f97a94f24076d69
         MLAT_CLIENT_HASH: 4feb73414bd85f051320394d290101290760995dacae936a03a4c208560bc73c
@@ -108,6 +123,9 @@ services:
     build:
       context: adsbhub
       dockerfile: Dockerfile-adsbhub
+      cache_from:
+        - thebiggerguy/docker-ads-b-adsbhub
+        - thebiggerguy/docker-ads-b-adsbhub:${TAG:-latest}
     depends_on:
       - dump1090
     deploy:
@@ -121,6 +139,9 @@ services:
     build:
       context: openskynetwork
       dockerfile: Dockerfile-openskynetwork
+      cache_from:
+        - thebiggerguy/docker-ads-b-openskynetwork
+        - thebiggerguy/docker-ads-b-openskynetwork:${TAG:-latest}
     ports:
       - "30975:30005/tcp"
     depends_on:
