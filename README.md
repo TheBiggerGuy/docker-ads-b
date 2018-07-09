@@ -1,6 +1,11 @@
 # Docker ADS-B
 Docker container for ADS-B
 
+| Branch | Status |
+|--------|--------|
+| latest | [![Build Status](https://travis-ci.org/TheBiggerGuy/docker-ads-b.svg?branch=latest)](https://travis-ci.org/TheBiggerGuy/docker-ads-b) |
+| dev    | [![Build Status](https://travis-ci.org/TheBiggerGuy/docker-ads-b.svg?branch=dev)](https://travis-ci.org/TheBiggerGuy/docker-ads-b) |
+
 | dump1090 | adsbexchange | adsbexchange-mlat | adsbhub | flightradar24 | openskynetwork | planefinder |
 |----------|--------------|-------------------|---------|---------------|----------------|-------------|
 | [![](https://images.microbadger.com/badges/image/thebiggerguy/docker-ads-b-dump1090.svg)](https://microbadger.com/images/thebiggerguy/docker-ads-b-dump1090)   | [![](https://images.microbadger.com/badges/image/thebiggerguy/docker-ads-b-adsbexchange.svg)](https://microbadger.com/images/thebiggerguy/docker-ads-b-adsbexchange)   | [![](https://images.microbadger.com/badges/image/thebiggerguy/docker-ads-b-adsbexchange-mlat.svg)](https://microbadger.com/images/thebiggerguy/docker-ads-b-adsbexchange-mlat)   | [![](https://images.microbadger.com/badges/image/thebiggerguy/docker-ads-b-adsbhub.svg)](https://microbadger.com/images/thebiggerguy/docker-ads-b-adsbhub)   | [![](https://images.microbadger.com/badges/image/thebiggerguy/docker-ads-b-flightradar24.svg)](https://microbadger.com/images/thebiggerguy/docker-ads-b-flightradar24)   | [![](https://images.microbadger.com/badges/image/thebiggerguy/docker-ads-b-openskynetwork.svg)](https://microbadger.com/images/thebiggerguy/docker-ads-b-openskynetwork)   | [![](https://images.microbadger.com/badges/image/thebiggerguy/docker-ads-b-planefinder.svg)](https://microbadger.com/images/thebiggerguy/docker-ads-b-planefinder)   |
