@@ -1,10 +1,26 @@
 sudo: required
+language: generic
+addons:
+  apt:
+    packages:
+      - docker-ce
 
 services:
   - docker
 
 env:
-  - DOCKER_COMPOSE_VERSION=1.21.2
+  global:
+    - DOCKER_COMPOSE_VERSION=1.21.2
+
+matrix:
+  include:
+    - env: SUB_IMAGE=dump1090
+    - env: SUB_IMAGE=adsbexchange
+    - env: SUB_IMAGE=adsbexchange-mlat
+    - env: SUB_IMAGE=adsbhub
+    - env: SUB_IMAGE=flightradar24
+    - env: SUB_IMAGE=openskynetwork
+    - env: SUB_IMAGE=planefinder
 
 before_install:
   # exit on error
@@ -17,14 +33,8 @@ before_install:
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
   
-  # Pull images to help with cache
-  - docker pull "thebiggerguy/docker-ads-b-dump1090:${TRAVIS_BRANCH}"
-  - docker pull "thebiggerguy/docker-ads-b-adsbexchange:${TRAVIS_BRANCH}"
-  - docker pull "thebiggerguy/docker-ads-b-adsbexchange-mlat:${TRAVIS_BRANCH}"
-  - docker pull "thebiggerguy/docker-ads-b-adsbhub:${TRAVIS_BRANCH}"
-  - docker pull "thebiggerguy/docker-ads-b-flightradar24:${TRAVIS_BRANCH}"
-  - docker pull "thebiggerguy/docker-ads-b-openskynetwork:${TRAVIS_BRANCH}"
-  - docker pull "thebiggerguy/docker-ads-b-planefinder:${TRAVIS_BRANCH}"
+  # Pull images to help with cache (allow failure as tag may not exist)
+  - docker pull "thebiggerguy/docker-ads-b-${SUB_IMAGE}:${TRAVIS_BRANCH}" || true
   
   # setup QEMU
   - docker run --rm --privileged multiarch/qemu-user-static:register
@@ -33,7 +43,8 @@ script:
   - TAG="${TRAVIS_BRANCH}"
     docker-compose build
       --build-arg VCS_REF=$(git rev-parse --short HEAD)
+      "${SUB_IMAGE}"
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - TAG="${TRAVIS_BRANCH}" docker-compose push
+  - TAG="${TRAVIS_BRANCH}" docker-compose push "${SUB_IMAGE}"
