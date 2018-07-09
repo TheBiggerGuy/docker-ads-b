@@ -1,22 +1,20 @@
 # Base Image ##################################################################
-FROM multiarch/debian-debootstrap:armhf-buster-slim as base
+FROM multiarch/alpine:armhf-v3.8 as base
 
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get install -y --no-install-recommends tini librtlsdr0 libusb-1.0-0 && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm -rf /usr/share/doc/ && \
-    rm -rf /usr/share/man/
+RUN cat /etc/apk/repositories && \
+    echo '@edge http://nl.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories && \
+    echo '@testing http://nl.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories && \
+    cat /etc/apk/repositories && \
+    apk add --no-cache tini librtlsdr@testing libusb
 
 
 # Builder Image ###############################################################
 FROM base as builder
 
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apk add --no-cache \
         curl ca-certificates \
-        coreutils make gcc pkg-config \
-        librtlsdr-dev libusb-dev
+        coreutils make gcc pkgconf \
+        libc-dev librtlsdr-dev@testing libusb-dev
 
 
 ARG DUMP1090_VERSION
