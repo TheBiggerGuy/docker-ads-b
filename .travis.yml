@@ -9,7 +9,8 @@ services:
   - docker
 
 env:
-  - DOCKER_COMPOSE_VERSION=1.21.2
+  global:
+    - DOCKER_COMPOSE_VERSION=1.21.2
 
 matrix:
   include:
