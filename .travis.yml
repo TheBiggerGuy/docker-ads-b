@@ -30,9 +30,13 @@ before_install:
   - docker run --rm --privileged multiarch/qemu-user-static:register
   - curl -L --output 'qemu-arm-static' https://github.com/multiarch/qemu-user-static/releases/download/v2.12.0/qemu-arm-static
   - echo "c34e328f6eeb64b3ec1d30def308d061050824cf01d65e919c25ddfa17795dea  qemu-arm-static" | sha256sum -c
+  - chmod -x qemu-arm-static
 
 script:
-  - TAG="${TRAVIS_BRANCH}" docker-compose build --build-arg VCS_REF=$(git rev-parse --short HEAD)
+  - TAG="${TRAVIS_BRANCH}"
+    docker-compose -f docker-compose.yml -f .travis/docker-compose.yml
+      build
+      --build-arg VCS_REF=$(git rev-parse --short HEAD)
 
 after_success:
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
