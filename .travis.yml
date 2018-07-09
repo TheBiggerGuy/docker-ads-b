@@ -18,13 +18,13 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
   
   # Pull images to help with cache
-  - docker pull thebiggerguy/docker-ads-b-dump1090
-  - docker pull thebiggerguy/docker-ads-b-adsbexchange
-  - docker pull thebiggerguy/docker-ads-b-adsbexchange-mlat
-  - docker pull thebiggerguy/docker-ads-b-adsbhub
-  - docker pull thebiggerguy/docker-ads-b-flightradar24
-  - docker pull thebiggerguy/docker-ads-b-openskynetwork
-  - docker pull thebiggerguy/docker-ads-b-planefinder
+  - docker pull "thebiggerguy/docker-ads-b-dump1090:${TRAVIS_BRANCH}"
+  - docker pull "thebiggerguy/docker-ads-b-adsbexchange:${TRAVIS_BRANCH}"
+  - docker pull "thebiggerguy/docker-ads-b-adsbexchange-mlat:${TRAVIS_BRANCH}"
+  - docker pull "thebiggerguy/docker-ads-b-adsbhub:${TRAVIS_BRANCH}"
+  - docker pull "thebiggerguy/docker-ads-b-flightradar24:${TRAVIS_BRANCH}"
+  - docker pull "thebiggerguy/docker-ads-b-openskynetwork:${TRAVIS_BRANCH}"
+  - docker pull "thebiggerguy/docker-ads-b-planefinder:${TRAVIS_BRANCH}"
   
   # setup QEMU
   - docker run --rm --privileged multiarch/qemu-user-static:register
