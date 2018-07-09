@@ -23,15 +23,13 @@ before_install:
   - sudo mv docker-compose /usr/local/bin
   
   # Pull images to help with cache (allow failure as tag may not exist)
-  - set +o errexit
   - docker pull "thebiggerguy/docker-ads-b-dump1090:${TRAVIS_BRANCH}" || true
-  - docker pull "thebiggerguy/docker-ads-b-adsbexchange:${TRAVIS_BRANCH}"
-  - docker pull "thebiggerguy/docker-ads-b-adsbexchange-mlat:${TRAVIS_BRANCH}"
-  - docker pull "thebiggerguy/docker-ads-b-adsbhub:${TRAVIS_BRANCH}"
-  - docker pull "thebiggerguy/docker-ads-b-flightradar24:${TRAVIS_BRANCH}"
-  - docker pull "thebiggerguy/docker-ads-b-openskynetwork:${TRAVIS_BRANCH}"
-  - docker pull "thebiggerguy/docker-ads-b-planefinder:${TRAVIS_BRANCH}"
-  - set -o errexit
+  - docker pull "thebiggerguy/docker-ads-b-adsbexchange:${TRAVIS_BRANCH}" || true
+  - docker pull "thebiggerguy/docker-ads-b-adsbexchange-mlat:${TRAVIS_BRANCH}" || true
+  - docker pull "thebiggerguy/docker-ads-b-adsbhub:${TRAVIS_BRANCH}" || true
+  - docker pull "thebiggerguy/docker-ads-b-flightradar24:${TRAVIS_BRANCH}" || true
+  - docker pull "thebiggerguy/docker-ads-b-openskynetwork:${TRAVIS_BRANCH}" || true
+  - docker pull "thebiggerguy/docker-ads-b-planefinder:${TRAVIS_BRANCH}" || true
   
   # setup QEMU
   - docker run --rm --privileged multiarch/qemu-user-static:register
