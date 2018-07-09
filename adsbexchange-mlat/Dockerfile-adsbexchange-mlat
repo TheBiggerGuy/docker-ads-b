@@ -1,4 +1,4 @@
-FROM multiarch/alpine:armhf-v3.7 as base
+FROM multiarch/alpine:armhf-v3.8 as base
 
 RUN apk add --no-cache python3
 
