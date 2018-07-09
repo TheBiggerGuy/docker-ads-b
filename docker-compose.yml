@@ -58,9 +58,9 @@ services:
     build:
       context: planefinder
       dockerfile: Dockerfile-planefinder
-        cache_from:
-          - thebiggerguy/docker-ads-b-planefinder
-          - thebiggerguy/docker-ads-b-planefinder:${TAG:-latest}
+      cache_from:
+        - thebiggerguy/docker-ads-b-planefinder
+        - thebiggerguy/docker-ads-b-planefinder:${TAG:-latest}
       args:
         PFCLIENT_VERSION: 4.1.1
         PFCLIENT_HASH: c2411ca2c9ce1a6a00c1c8af0ce3f7f9
