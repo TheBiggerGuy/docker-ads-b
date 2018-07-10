@@ -1,0 +1,111 @@
+# base ########################################################################
+FROM multiarch/debian-debootstrap:armhf-buster-slim as base
+
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        curl ca-certificates \
+        net-tools iproute2 tclx8.4 tcl8.6 tcllib tcl-tls itcl3 procps && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# tcllauncher #################################################################
+FROM base as tcllauncher
+
+ARG TCLLAUNCHER_VERSION
+ARG TCLLAUNCHER_HASH
+
+
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends make autoconf tcl8.6-dev gcc
+
+RUN curl --output tcllauncher.tar.gz -L "https://github.com/flightaware/tcllauncher/archive/${TCLLAUNCHER_VERSION}.tar.gz" && \
+    sha256sum tcllauncher.tar.gz && echo "${TCLLAUNCHER_HASH}  tcllauncher.tar.gz" | sha256sum -c
+RUN mkdir tcllauncher && cd tcllauncher && \
+    tar -xvf ../tcllauncher.tar.gz --strip-components=1
+WORKDIR tcllauncher
+RUN autoconf
+RUN ./configure --prefix='/opt/tcl'
+RUN make
+RUN make install
+
+
+# faup1090 ####################################################################
+FROM base as faup1090
+
+ARG FAUP1090_VERSION
+ARG FAUP1090_HASH
+
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends make gcc libc6-dev
+
+RUN curl --output faup1090.tar.gz -L "https://github.com/flightaware/dump1090/archive/${FAUP1090_VERSION}.tar.gz" && \
+    sha256sum faup1090.tar.gz && echo "${FAUP1090_HASH}  faup1090.tar.gz" | sha256sum -c
+RUN mkdir faup1090 && cd faup1090 && \
+    tar -xvf ../faup1090.tar.gz --strip-components=1
+WORKDIR faup1090
+RUN make RTLSDR=no BLADERF=no DUMP1090_VERSION="piaware-adsb-docker" faup1090
+
+
+# piaware #####################################################################
+FROM base as piaware
+
+#COPY --from=tcllauncher /usr/lib/Tcllauncher1.6/tcllauncher.tcl /usr/lib/Tcllauncher1.6/tcllauncher.tcl
+#COPY --from=tcllauncher /usr/lib/Tcllauncher1.6/tcllauncher-support.tcl /usr/lib/Tcllauncher1.6/tcllauncher-support.tcl
+# TODO: Version number from TCLLAUNCHER_VERSION
+COPY --from=tcllauncher /usr/lib/Tcllauncher1.6 /usr/lib/Tcllauncher1.6
+COPY --from=tcllauncher /usr/bin/tcllauncher /usr/bin/tcllauncher
+COPY --from=tcllauncher /opt/tcl /opt/tcl
+
+ARG PIAWARE_VERSION
+ARG PIAWARE_HASH
+
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update && apt-get install -y --no-install-recommends make gcc libc6-dev
+
+RUN curl --output piaware.tar.gz -L "https://github.com/flightaware/piaware/archive/${PIAWARE_VERSION}.tar.gz" && \
+    sha256sum piaware.tar.gz && echo "${PIAWARE_HASH}  piaware.tar.gz" | sha256sum -c
+RUN mkdir piaware && cd piaware && \
+    tar -xvf ../piaware.tar.gz --strip-components=1
+WORKDIR piaware
+RUN make install
+
+RUN ls /usr/lib/pi* /usr/bin/pi*
+
+
+# final image #################################################################
+FROM base
+
+COPY --from=tcllauncher /usr/lib/Tcllauncher1.6 /usr/lib/Tcllauncher1.6
+
+COPY --from=piaware /usr/bin/piaware /usr/bin/piaware
+COPY --from=piaware /usr/lib/piaware /usr/lib/piaware
+
+COPY --from=piaware /usr/bin/piaware-config /usr/bin/piaware-config
+COPY --from=piaware /usr/lib/piaware-config /usr/lib/piaware-config
+
+COPY --from=piaware /usr/bin/piaware-status /usr/bin/piaware-status
+COPY --from=piaware /usr/lib/piaware-status /usr/lib/piaware-status
+
+#COPY --from=piaware /usr/bin/pirehose /usr/bin/pirehose
+#COPY --from=piaware /usr/lib/pirehose /usr/lib/pirehose
+
+COPY --from=piaware /usr/lib/piaware_packages /usr/lib/piaware_packages
+#COPY --from=piaware /usr/lib/fa_adept_codec /usr/lib/fa_adept_codec
+
+COPY --from=faup1090 /faup1090/faup1090 /usr/lib/piaware/helpers/faup1090
+
+
+COPY piaware.conf /etc/piaware.conf
+COPY piaware-runner.sh /usr/bin/piaware-runner
+ENTRYPOINT ["piaware-runner"]
+
+# Metadata
+ARG VCS_REF="Unknown"
+LABEL maintainer="thebigguy.co.uk@gmail.com" \
+      org.label-schema.name="Docker ADS-B - flightaware" \
+      org.label-schema.description="Docker container for ADS-B - This is the flightaware.com component" \
+      org.label-schema.url="https://github.com/TheBiggerGuy/docker-ads-b" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
+      org.label-schema.vcs-url="https://github.com/TheBiggerGuy/docker-ads-b" \
+      org.label-schema.schema-version="1.0"
