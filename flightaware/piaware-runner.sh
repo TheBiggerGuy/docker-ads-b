@@ -17,9 +17,16 @@ echo "FLIGHTAWARE_FEEDER_ID=${FLIGHTAWARE_FEEDER_ID}"
 echo
 
 
-piaware-config "flightaware-user" "${FLIGHTAWARE_USERNAME}"
- piaware-config "flightaware-password" "${FLIGHTAWARE_PASSWORD}"
-
+if [ -z "${FLIGHTAWARE_USERNAME}" ]; then
+    echo "No FLIGHTAWARE_USERNAME set"
+else
+    piaware-config "flightaware-user" "${FLIGHTAWARE_USERNAME}"
+fi
+if [ -z "${FLIGHTAWARE_PASSWORD}" ]; then
+    echo "No FLIGHTAWARE_PASSWORD set"
+else
+    piaware-config "flightaware-password" "${FLIGHTAWARE_PASSWORD}"
+fi
 if [ -z "${FLIGHTAWARE_FEEDER_ID}" ]; then
     echo "No FLIGHTAWARE_FEEDER_ID set"
 else

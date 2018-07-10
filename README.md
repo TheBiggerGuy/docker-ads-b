@@ -20,6 +20,12 @@ Edit the 'variables' files with the required keys and locations for each of the 
 * PLANEFINDER_LATITUDE
 * PLANEFINDER_LONGITUDE
 
+## variables-flightware.env
+Go to https://flightaware.com/adsb/piaware/claim
+* FLIGHTAWARE_USERNAME
+* FLIGHTAWARE_PASSWORD
+* FLIGHTAWARE_FEEDER_ID
+
 ## Docker Hub Links
 * https://hub.docker.com/r/thebiggerguy/docker-ads-b-dump1090/
 * https://hub.docker.com/r/thebiggerguy/docker-ads-b-adsbexchange/

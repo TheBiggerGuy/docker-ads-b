@@ -167,6 +167,8 @@ services:
         FAUP1090_HASH: 546b458738e25c2a6454b0396344549b15199dcb9ed0307a8d15f0ee25fb016f
         PIAWARE_VERSION: v3.5.3
         PIAWARE_HASH: 15debeb70b1a639644aa4e7a3a93f4749a14bc61969f6b49f1f438c91f5146f4
+    ports:
+      - "8080:8080/tcp"
     depends_on:
       - dump1090
     env_file:

@@ -98,6 +98,9 @@ COPY --from=faup1090 /faup1090/faup1090 /usr/lib/piaware/helpers/faup1090
 
 COPY piaware.conf /etc/piaware.conf
 COPY piaware-runner.sh /usr/bin/piaware-runner
+
+EXPOSE 8080/tcp
+
 ENTRYPOINT ["piaware-runner"]
 
 # Metadata
