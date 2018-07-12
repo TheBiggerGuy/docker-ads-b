@@ -19,6 +19,8 @@ services:
     #  - "30005:30005/tcp"
     devices:
       - "/dev/bus/usb/001/007"
+    env_file:
+      - variables-dump1090.env
     deploy:
       mode: global
       placement:
@@ -128,6 +130,8 @@ services:
         - thebiggerguy/docker-ads-b-adsbhub:${TAG:-latest}
     depends_on:
       - dump1090
+    env_file:
+      - variables-adsbhub.env
     deploy:
       restart_policy:
         condition: always
@@ -146,6 +150,8 @@ services:
       - "30975:30005/tcp"
     depends_on:
       - dump1090
+    env_file:
+      - variables-openskynetwork.env
     deploy:
       restart_policy:
         condition: always
