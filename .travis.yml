@@ -18,6 +18,7 @@ matrix:
     - env: SUB_IMAGE=adsbexchange
     - env: SUB_IMAGE=adsbexchange-mlat
     - env: SUB_IMAGE=adsbhub
+    - env: SUB_IMAGE=flightaware
     - env: SUB_IMAGE=flightradar24
     - env: SUB_IMAGE=openskynetwork
     - env: SUB_IMAGE=planefinder
