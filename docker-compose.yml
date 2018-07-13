@@ -176,7 +176,7 @@ services:
         PIAWARE_VERSION: v3.5.3
         PIAWARE_HASH: 15debeb70b1a639644aa4e7a3a93f4749a14bc61969f6b49f1f438c91f5146f4
     ports:
-      - "8080:8080/tcp"
+      - "30105:30105/tcp"
     depends_on:
       - dump1090
     env_file:

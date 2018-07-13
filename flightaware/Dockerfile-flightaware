@@ -1,26 +1,32 @@
 # base ########################################################################
 FROM multiarch/debian-debootstrap:armhf-buster-slim as base
 
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+ENV LC_ALL=C.UTF-8 LANG=C.UTF-8
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
         curl ca-certificates \
         net-tools iproute2 \
         tclx8.4 tcl8.6 tcllib tcl-tls itcl3 \
         python3 \
         procps && \
-    apt-get clean && \
+    DEBIAN_FRONTEND=noninteractive apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+
+# base ########################################################################
+FROM base as builder-base
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends make autoconf gcc libc6-dev
+
+
 # tcllauncher #################################################################
-FROM base as tcllauncher
+FROM builder-base as tcllauncher
 
 ARG TCLLAUNCHER_VERSION
 ARG TCLLAUNCHER_HASH
 
-
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get install -y --no-install-recommends make autoconf tcl8.6-dev gcc
+RUN apt-get install -y --no-install-recommends tcl8.6-dev
 
 RUN curl --output tcllauncher.tar.gz -L "https://github.com/flightaware/tcllauncher/archive/${TCLLAUNCHER_VERSION}.tar.gz" && \
     sha256sum tcllauncher.tar.gz && echo "${TCLLAUNCHER_HASH}  tcllauncher.tar.gz" | sha256sum -c
@@ -34,13 +40,10 @@ RUN make install
 
 
 # faup1090 ####################################################################
-FROM base as faup1090
+FROM builder-base as faup1090
 
 ARG FAUP1090_VERSION
 ARG FAUP1090_HASH
-
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get install -y --no-install-recommends make gcc libc6-dev
 
 RUN curl --output faup1090.tar.gz -L "https://github.com/flightaware/dump1090/archive/${FAUP1090_VERSION}.tar.gz" && \
     sha256sum faup1090.tar.gz && echo "${FAUP1090_HASH}  faup1090.tar.gz" | sha256sum -c
@@ -50,11 +53,10 @@ WORKDIR faup1090
 RUN make RTLSDR=no BLADERF=no DUMP1090_VERSION="piaware-adsb-docker" faup1090
 
 
-# mlat-client #################################################################
-FROM base as mlat-client
+# fa-mlat-client ##############################################################
+FROM builder-base as fa-mlat-client
 
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get install -y --no-install-recommends python3-dev python3-pip python3-setuptools gcc libc6-dev
+RUN apt-get install -y --no-install-recommends python3-dev python3-pip python3-setuptools
 RUN pip3 install --upgrade shiv importlib-resources==0.8
 
 ARG MLAT_CLIENT_VERSION
@@ -62,11 +64,11 @@ ARG MLAT_CLIENT_HASH
 
 RUN curl --output mlat-client.tar.gz -L "https://github.com/TheBiggerGuy/mlat-client/archive/${MLAT_CLIENT_VERSION}.tar.gz" && \
     sha256sum mlat-client.tar.gz && echo "${MLAT_CLIENT_HASH}  mlat-client.tar.gz" | sha256sum -c
-run shiv -c mlat-client -o /usr/local/bin/mlat-client /mlat-client.tar.gz
+run shiv -c fa-mlat-client -o /usr/local/bin/fa-mlat-client /mlat-client.tar.gz
 
 
 # piaware #####################################################################
-FROM base as piaware
+FROM builder-base as piaware
 
 #COPY --from=tcllauncher /usr/lib/Tcllauncher1.6/tcllauncher.tcl /usr/lib/Tcllauncher1.6/tcllauncher.tcl
 #COPY --from=tcllauncher /usr/lib/Tcllauncher1.6/tcllauncher-support.tcl /usr/lib/Tcllauncher1.6/tcllauncher-support.tcl
@@ -77,9 +79,6 @@ COPY --from=tcllauncher /opt/tcl /opt/tcl
 
 ARG PIAWARE_VERSION
 ARG PIAWARE_HASH
-
-ENV DEBIAN_FRONTEND noninteractive
-RUN apt-get update && apt-get install -y --no-install-recommends make gcc libc6-dev
 
 RUN curl --output piaware.tar.gz -L "https://github.com/flightaware/piaware/archive/${PIAWARE_VERSION}.tar.gz" && \
     sha256sum piaware.tar.gz && echo "${PIAWARE_HASH}  piaware.tar.gz" | sha256sum -c
@@ -113,12 +112,12 @@ COPY --from=piaware /usr/lib/piaware_packages /usr/lib/piaware_packages
 
 COPY --from=faup1090 /faup1090/faup1090 /usr/lib/piaware/helpers/faup1090
 
-COPY --from=mlat-client /usr/local/bin/mlat-client /usr/local/bin/mlat-client
+COPY --from=fa-mlat-client /usr/local/bin/fa-mlat-client /usr/lib/piaware/helpers/fa-mlat-client
 
 COPY piaware.conf /etc/piaware.conf
 COPY piaware-runner.sh /usr/bin/piaware-runner
 
-EXPOSE 8080/tcp
+EXPOSE 30105/tcp
 
 ENTRYPOINT ["piaware-runner"]
 

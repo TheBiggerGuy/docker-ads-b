@@ -33,4 +33,11 @@ else
     piaware-config "feeder-id" "${FLIGHTAWARE_FEEDER_ID}"
 fi
 
+# Fix issue with fa-mlat-client
+# The fa-mlat-client is run as "nobody" with most permissions dropped.
+# This causes issues with extracting to ~/.shiv (the default) so use /tmp instead.
+export SHIV_ROOT='/tmp'
+
 piaware -plainlog
+
+exit ${?}
