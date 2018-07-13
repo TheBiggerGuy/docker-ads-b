@@ -19,6 +19,8 @@ services:
     #  - "30005:30005/tcp"
     devices:
       - "/dev/bus/usb/001/007"
+    env_file:
+      - variables-dump1090.env
     deploy:
       mode: global
       placement:
@@ -128,6 +130,8 @@ services:
         - thebiggerguy/docker-ads-b-adsbhub:${TAG:-latest}
     depends_on:
       - dump1090
+    env_file:
+      - variables-adsbhub.env
     deploy:
       restart_policy:
         condition: always
@@ -146,6 +150,37 @@ services:
       - "30975:30005/tcp"
     depends_on:
       - dump1090
+    env_file:
+      - variables-openskynetwork.env
+    deploy:
+      restart_policy:
+        condition: always
+        delay: 5s
+
+  # flightaware ###############################################################
+  flightaware:
+    image: thebiggerguy/docker-ads-b-flightaware:${TAG:-latest}
+    build:
+      context: flightaware
+      dockerfile: Dockerfile-flightaware
+      #cache_from:
+      #  - thebiggerguy/docker-ads-b-flightaware
+      #  - thebiggerguy/docker-ads-b-flightaware:${TAG:-latest}
+      args:
+        TCLLAUNCHER_VERSION: v1.6
+        TCLLAUNCHER_HASH: 14b20d4f29c0abf758d28eb4b7af86cfe4e6c70311a4b58f553bd1b8944f52e6
+        FAUP1090_VERSION: v3.5.3
+        FAUP1090_HASH: 546b458738e25c2a6454b0396344549b15199dcb9ed0307a8d15f0ee25fb016f
+        MLAT_CLIENT_VERSION: c604f5c9bc5207464f95015c7f97a94f24076d69
+        MLAT_CLIENT_HASH: 4feb73414bd85f051320394d290101290760995dacae936a03a4c208560bc73c
+        PIAWARE_VERSION: v3.5.3
+        PIAWARE_HASH: 15debeb70b1a639644aa4e7a3a93f4749a14bc61969f6b49f1f438c91f5146f4
+    ports:
+      - "30105:30105/tcp"
+    depends_on:
+      - dump1090
+    env_file:
+      - variables-flightaware.env
     deploy:
       restart_policy:
         condition: always
