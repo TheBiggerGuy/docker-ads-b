@@ -26,5 +26,5 @@ mlat-client --input-type 'dump1090' \
             --user "${MLAT_CLIENT_USER}" \
             --server 'feed.adsbexchange.com:31090' \
             --no-udp \
-            --results 'beast,connect,0.0.0.0:30104' \
+            --results 'beast,listen,30104' \
             "$@"
