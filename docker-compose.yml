@@ -168,9 +168,9 @@ services:
     build:
       context: flightaware
       dockerfile: Dockerfile-flightaware
-      #cache_from:
-      #  - thebiggerguy/docker-ads-b-flightaware
-      #  - thebiggerguy/docker-ads-b-flightaware:${TAG:-latest}
+      cache_from:
+        - thebiggerguy/docker-ads-b-flightaware
+        - thebiggerguy/docker-ads-b-flightaware:${TAG:-latest}
       args:
         TCLLAUNCHER_VERSION: v1.6
         TCLLAUNCHER_HASH: 14b20d4f29c0abf758d28eb4b7af86cfe4e6c70311a4b58f553bd1b8944f52e6
