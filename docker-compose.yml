@@ -21,6 +21,8 @@ services:
       - "/dev/bus/usb/001/007"
     env_file:
       - variables-dump1090.env
+    cap_add:
+      - SYS_NICE
     deploy:
       mode: global
       placement:
@@ -29,6 +31,9 @@ services:
       restart_policy:
         condition: always
         delay: 5s
+      resources:
+        reservations:
+          cpus: '1.0'
 
   # flightradar24 #############################################################
   flightradar24:
@@ -163,9 +168,9 @@ services:
     build:
       context: flightaware
       dockerfile: Dockerfile-flightaware
-      #cache_from:
-      #  - thebiggerguy/docker-ads-b-flightaware
-      #  - thebiggerguy/docker-ads-b-flightaware:${TAG:-latest}
+      cache_from:
+        - thebiggerguy/docker-ads-b-flightaware
+        - thebiggerguy/docker-ads-b-flightaware:${TAG:-latest}
       args:
         TCLLAUNCHER_VERSION: v1.6
         TCLLAUNCHER_HASH: 14b20d4f29c0abf758d28eb4b7af86cfe4e6c70311a4b58f553bd1b8944f52e6
@@ -185,3 +190,30 @@ services:
       restart_policy:
         condition: always
         delay: 5s
+
+  # virtualradar ##############################################################
+  virtualradar:
+    image: thebiggerguy/docker-ads-b-virtualradar:${TAG:-latest}
+    build:
+      context: virtualradar
+      dockerfile: Dockerfile-virtualradar
+      #cache_from:
+      #  - thebiggerguy/docker-ads-b-virtualradar
+      #  - thebiggerguy/docker-ads-b-virtualradar:${TAG:-latest}
+      args:
+        VIRTUALRADAR_HASH: 6a8626cdf82b067318aadb75cee5d4428faed28626e7f49ae77dc9f746abb3fc
+        VIRTUALRADAR_WEBADMINPLUGIN_HASH: affa6a92d0454109f5d39d32888a208dee547fb30871719f5ba5ceca2bedf215  
+    ports:
+      - "8080:8080/tcp"
+    depends_on:
+      - dump1090
+    env_file:
+      - variables-virtualradar.env
+    deploy:
+      restart_policy:
+        condition: always
+        delay: 5s
+      resources:
+        limits:
+          cpus: '0.75'
+          memory: 512M

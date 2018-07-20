@@ -28,6 +28,7 @@ matrix:
     - env: SUB_IMAGE=flightradar24
     - env: SUB_IMAGE=openskynetwork
     - env: SUB_IMAGE=planefinder
+    - env: SUB_IMAGE=virtualradar
 
 before_install:
   # exit on error

@@ -41,7 +41,7 @@ EXPOSE 30002/tcp
 # Beast output
 EXPOSE 30005/tcp
 
-ENTRYPOINT ["tini", "--", "dump1090", "--net", "--net-bind-address", "0.0.0.0", "--debug", "n", "--mlat", "--net-heartbeat", "5"]
+ENTRYPOINT ["tini", "--", "nice", "-n", "-5", "dump1090", "--net", "--net-bind-address", "0.0.0.0", "--debug", "n", "--mlat", "--net-heartbeat", "5"]
 
 # Metadata
 ARG VCS_REF="Unknown"
