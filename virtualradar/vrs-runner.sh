@@ -16,5 +16,6 @@ sleep 5s
 echo "Ping test to dump1090"
 ping -c 3 "${DUMP1090_SERVER}"
 
+export MONO_PATH="/opt/vrs:${MONO_PATH:=}"
 
-mono VirtualRadar.exe -nogui -createAdmin:admin -password:admin
+mono /opt/vrs/VirtualRadar.exe -nogui -"createAdmin:${VIRTUALRADAR_DEFAULT_ADMIN_USER}" -"password:${VIRTUALRADAR_DEFAULT_ADMIN_PASSWORD}"
