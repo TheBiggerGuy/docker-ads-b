@@ -1,5 +1,11 @@
 sudo: required
 language: generic
+
+branches:
+  only:
+    - latest
+    - dev
+
 addons:
   apt:
     packages:
