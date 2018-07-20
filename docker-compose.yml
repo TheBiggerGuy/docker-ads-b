@@ -185,3 +185,26 @@ services:
       restart_policy:
         condition: always
         delay: 5s
+
+  # virtualradar ##############################################################
+  virtualradar:
+    image: thebiggerguy/docker-ads-b-virtualradar:${TAG:-latest}
+    build:
+      context: virtualradar
+      dockerfile: Dockerfile-virtualradar
+      #cache_from:
+      #  - thebiggerguy/docker-ads-b-virtualradar
+      #  - thebiggerguy/docker-ads-b-virtualradar:${TAG:-latest}
+      args:
+        VRS_VERSION: 7b8ee36ab10b702065a1de5cb8f72ccc862ee083
+        VRS_HASH: e69fb72dacf25c67c89ac4651ccfe28a4ddc550091bb8769cb4113626f825242  
+    ports:
+      - "8080:8080/tcp"
+    depends_on:
+      - dump1090
+    env_file:
+      - variables-virtualradar.env
+    deploy:
+      restart_policy:
+        condition: always
+        delay: 5s

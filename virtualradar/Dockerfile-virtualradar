@@ -1,0 +1,66 @@
+FROM multiarch/debian-debootstrap:armhf-buster-slim as base
+
+RUN apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends apt-transport-https dirmngr gnupg ca-certificates-mono && \
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
+    echo 'deb https://download.mono-project.com/repo/debian stable-stretch main' | tee /etc/apt/sources.list.d/mono-official-stable.list && \
+    apt-get remove --purge --autoremove -y gnupg dirmngr && \
+    apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends curl ca-certificates ca-certificates-mono iputils-ping \
+        mono-runtime \
+        libmono-sqlite4.0-cil \
+        libmono-system-net4.0-cil \
+        libmono-system-net-http4.0-cil \
+        libmono-system-windows-forms4.0-cil \
+        libmono-system-drawing4.0-cil \
+        libmono-system-data4.0-cil \
+        libmono-system-runtime4.0-cil \
+        libmono-system-xml4.0-cil \
+        libmono-system-io-compression4.0-cil \
+        libmono-system-web4.0-cil && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+FROM base as builder
+
+ENV DEBIAN_FRONTEND noninteractive
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends msbuild mono-devel
+RUN apt-get install -y --no-install-recommends nuget mono-roslyn
+
+ARG VRS_VERSION
+ARG VRS_HASH
+
+RUN curl --output vrs.tar.gz -L "https://github.com/TheBiggerGuy/vrs/archive/${VRS_VERSION}.tar.gz" && \
+    sha256sum vrs.tar.gz && echo "${VRS_HASH}  vrs.tar.gz" | sha256sum -c || true
+RUN mkdir vrs && cd vrs && \
+    tar -xvf ../vrs.tar.gz --strip-components=1
+WORKDIR vrs
+
+RUN cert-sync /etc/ssl/certs/ca-certificates.crt
+RUN nuget install Owin
+
+COPY VirtualRadar.exe.config /vrs/VirtualRadar.exe.config
+# /"p:Platform=Any CPU" vs /"p:Platform=AnyCPU"
+RUN msbuild /"p:TargetFrameworkVersion=v4.6" /"p:Configuration=Release" VirtualRadar.sln
+
+FROM base
+
+COPY --from=builder VirtualRadar.exe /usr/local/bin/VirtualRadar.exe
+
+COPY InstallerConfiguration.xml /root/.local/share/VirtualRadar/InstallerConfiguration.xml
+COPY vrs-runner.sh /usr/local/bin/vrs-runner
+
+EXPOSE 30053
+
+ENTRYPOINT ["vrs-runner"]
+
+# Metadata
+ARG VCS_REF="Unknown"
+LABEL maintainer="thebigguy.co.uk@gmail.com" \
+      org.label-schema.name="Docker ADS-B - VirtualRadar" \
+      org.label-schema.description="Docker container for ADS-B - This is the virtualradarserver.co.uk component" \
+      org.label-schema.url="https://github.com/TheBiggerGuy/docker-ads-b" \
+      org.label-schema.vcs-ref="${VCS_REF}" \
+      org.label-schema.vcs-url="https://github.com/TheBiggerGuy/docker-ads-b" \
+      org.label-schema.schema-version="1.0"
