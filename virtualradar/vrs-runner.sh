@@ -18,4 +18,8 @@ ping -c 3 "${DUMP1090_SERVER}"
 
 export MONO_PATH="/opt/vrs:${MONO_PATH:=}"
 
+# https://www.mono-project.com/docs/advanced/runtime/logging-runtime-events/
+export MONO_LOG_LEVEL='info'
+export MONO_LOG_MASK='dll,cfg'
+
 mono /opt/vrs/VirtualRadar.exe -nogui -"createAdmin:${VIRTUALRADAR_DEFAULT_ADMIN_USER}" -"password:${VIRTUALRADAR_DEFAULT_ADMIN_PASSWORD}"
