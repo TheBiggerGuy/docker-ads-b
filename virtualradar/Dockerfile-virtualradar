@@ -1,10 +1,19 @@
 FROM multiarch/debian-debootstrap:armhf-buster-slim as base
 
 RUN apt-get update && \
+    # Install required tools for gpg imports
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends apt-transport-https ca-certificates dirmngr gnupg && \
+    # Install Mono Key
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
+    # Install Microsoft Key
+    apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys BC528686B50D79E339D3721CEB3E94ADBE1229CF && \
+    # Add Mono repo
     echo 'deb https://download.mono-project.com/repo/debian stable-stretch main' | tee /etc/apt/sources.list.d/mono-official-stable.list && \
+    # Add Microsoft repo
+    echo 'deb https://packages.microsoft.com/debian/9/prod stretch main'         | tee /etc/apt/sources.list.d/microsoft-official-stable.list && \
+    # Remove the gpg tools
     apt-get remove --purge --autoremove -y gnupg dirmngr && \
+    # Update to pick up new repos
     apt-get update && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends curl ca-certificates iputils-ping \
         mono-runtime \
@@ -46,25 +55,32 @@ RUN apt-get update && \
 
 FROM base as builder
 
-ARG VIRTUALRADAR_HASH
-ARG VIRTUALRADAR_WEBADMINPLUGIN_HASH
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends mono-devel msbuild nuget
 
-RUN curl --output VirtualRadar.tar.gz -L "http://www.virtualradarserver.co.uk/Files/VirtualRadar.tar.gz" && \
+ARG VIRTUALRADAR_VERSION
+ARG VIRTUALRADAR_HASH
+
+RUN curl --output VirtualRadar.tar.gz -L "https://github.com/vradarserver/vrs/archive/${VIRTUALRADAR_VERSION}.tar.gz" && \
     sha256sum VirtualRadar.tar.gz && echo "${VIRTUALRADAR_HASH}  VirtualRadar.tar.gz" | sha256sum -c
-RUN curl --output VirtualRadar.WebAdminPlugin.tar.gz  -L "http://www.virtualradarserver.co.uk/Files/VirtualRadar.WebAdminPlugin.tar.gz" && \
-    sha256sum VirtualRadar.WebAdminPlugin.tar.gz && echo "${VIRTUALRADAR_WEBADMINPLUGIN_HASH}  VirtualRadar.WebAdminPlugin.tar.gz" | sha256sum -c
 
 RUN mkdir vrs && cd vrs && \
-    tar -xvf ../VirtualRadar.tar.gz --strip-components=0 && \
-    tar -xvf ../VirtualRadar.WebAdminPlugin.tar.gz --strip-components=0
+    tar -xvf ../VirtualRadar.tar.gz --strip-components=1
+WORKDIR vrs
 
-COPY VirtualRadar.exe.config /vrs/VirtualRadar.exe.config
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends dotnet-sdk-2.1
+
+RUN nuget install Microsoft.Owin
+RUN msbuild
+
+# COPY VirtualRadar.exe.config /vrs/VirtualRadar.exe.config
 
 FROM base
 
 COPY --from=builder /vrs /opt/vrs
 
 COPY InstallerConfiguration.xml /root/.local/share/VirtualRadar/InstallerConfiguration.xml
+COPY Configuration.xml /root/.local/share/VirtualRadar/Configuration.xml
 COPY vrs-runner.sh /usr/local/bin/vrs-runner
 
 EXPOSE 30053
