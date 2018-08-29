@@ -3,7 +3,8 @@ FROM multiarch/debian-debootstrap:armhf-buster-slim
 ARG FR24FEED_VERSION
 ARG FR24FEED_HASH
 
-# https://feed.flightradar24.com/fr24feed-manual.pdf
+# Find the laest version @ http://repo.feed.flightradar24.com/ searching for "rpi_binaries/fr24feed_*_armhf.tgz"
+# With the changelog @ http://repo.feed.flightradar24.com/CHANGELOG.md
 ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates iputils-ping dnsutils && \
     curl --output fr24feed.tgz "http://repo.feed.flightradar24.com/rpi_binaries/fr24feed_${FR24FEED_VERSION}_armhf.tgz" && \
@@ -14,6 +15,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certifi
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
+# https://feed.flightradar24.com/fr24feed-manual.pdf
 COPY fr24feed.ini /etc/fr24feed.ini
 COPY fr24feed-runner.sh /usr/bin/fr24feed-runner
 

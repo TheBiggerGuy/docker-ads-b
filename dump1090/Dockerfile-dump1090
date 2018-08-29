@@ -41,7 +41,7 @@ EXPOSE 30002/tcp
 # Beast output
 EXPOSE 30005/tcp
 
-ENTRYPOINT ["tini", "--", "nice", "-n", "-5", "dump1090", "--net", "--net-bind-address", "0.0.0.0", "--debug", "n", "--mlat", "--net-heartbeat", "5"]
+ENTRYPOINT ["tini", "--", "nice", "-n", "-5", "dump1090", "--net", "--net-bind-address", "0.0.0.0", "--debug", "n", "--mlat", "--net-heartbeat", "5", "--quiet", "--stats-every", "60"]
 
 # Metadata
 ARG VCS_REF="Unknown"
@@ -52,3 +52,4 @@ LABEL maintainer="thebigguy.co.uk@gmail.com" \
       org.label-schema.vcs-ref="${VCS_REF}" \
       org.label-schema.vcs-url="https://github.com/TheBiggerGuy/docker-ads-b" \
       org.label-schema.schema-version="1.0"
+
