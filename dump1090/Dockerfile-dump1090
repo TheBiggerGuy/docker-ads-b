@@ -1,5 +1,5 @@
 # Base Image ##################################################################
-FROM multiarch/alpine:armhf-v3.8 as base
+FROM multiarch/alpine:armhf-v3.9 as base
 
 RUN cat /etc/apk/repositories && \
     echo '@edge http://nl.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories && \

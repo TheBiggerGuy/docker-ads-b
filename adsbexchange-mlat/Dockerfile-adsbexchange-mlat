@@ -1,4 +1,4 @@
-FROM multiarch/alpine:armhf-v3.8 as base
+FROM multiarch/alpine:armhf-v3.9 as base
 
 RUN apk add --no-cache python3 && \
     rm -rf /usr/share/terminfo
