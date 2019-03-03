@@ -45,8 +45,8 @@ services:
         - thebiggerguy/docker-ads-b-flightradar24
         - thebiggerguy/docker-ads-b-flightradar24:${TAG:-latest}
       args:
-        FR24FEED_VERSION: 1.0.19-15
-        FR24FEED_HASH: ea2674b5eaa071d3e469a103971a2d42973014d5fde8fd3b0fe123dbd4f1476b
+        FR24FEED_VERSION: 1.0.23-8
+        FR24FEED_HASH: adc72b6a5ffe0eb089748cd26a981eac7468b5a61ee0783c7e3bc3c0ee9c52b4
     ports:
       - "8754:8754/tcp"
     depends_on:
