@@ -53,6 +53,10 @@ script:
       --build-arg VCS_REF=$(git rev-parse --short HEAD)
       "${SUB_IMAGE}"
 
-after_success:
-  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
-  - TAG="${TRAVIS_BRANCH}" docker-compose push "${SUB_IMAGE}"
+deploy:
+  provider: script
+  script: bash .travis/docker_push.sh
+  on:
+    branch:
+      - master
+      - dev
