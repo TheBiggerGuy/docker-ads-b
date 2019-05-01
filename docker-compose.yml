@@ -169,17 +169,19 @@ services:
       context: flightaware
       dockerfile: Dockerfile-flightaware
       cache_from:
+        - docker-ads-b-flightaware
+        - docker-ads-b-flightaware:${TAG:-latest}
         - thebiggerguy/docker-ads-b-flightaware
         - thebiggerguy/docker-ads-b-flightaware:${TAG:-latest}
       args:
-        TCLLAUNCHER_VERSION: v1.6
-        TCLLAUNCHER_HASH: 14b20d4f29c0abf758d28eb4b7af86cfe4e6c70311a4b58f553bd1b8944f52e6
-        FAUP1090_VERSION: v3.5.3
-        FAUP1090_HASH: 546b458738e25c2a6454b0396344549b15199dcb9ed0307a8d15f0ee25fb016f
+        TCLLAUNCHER_VERSION: v1.8
+        TCLLAUNCHER_HASH: f2afbf74e11a40501373099684766731dd59dfc2b9c85ba04892e6cdb2435f72
+        FAUP1090_VERSION: v3.7.0.1
+        FAUP1090_HASH: a7512e9f292348d840f18501ff4004a8d3e13f37947d66183dee0e279c4b6939
         MLAT_CLIENT_VERSION: c604f5c9bc5207464f95015c7f97a94f24076d69
         MLAT_CLIENT_HASH: 4feb73414bd85f051320394d290101290760995dacae936a03a4c208560bc73c
-        PIAWARE_VERSION: v3.5.3
-        PIAWARE_HASH: 15debeb70b1a639644aa4e7a3a93f4749a14bc61969f6b49f1f438c91f5146f4
+        PIAWARE_VERSION: v3.7.0.1
+        PIAWARE_HASH: 58c5e7a8dcc413d1e384465d4abb9a86799e26a32d0fba111b919431dbb6c020
     ports:
       - "30105:30105/tcp"
     depends_on:
