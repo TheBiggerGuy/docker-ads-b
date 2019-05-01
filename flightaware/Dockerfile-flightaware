@@ -70,8 +70,8 @@ ARG MLAT_CLIENT_HASH
 # TODO: Fix curl/Travis/GitHub SLL failure. The SHA256 checks will maintain security until this is fixed.
 RUN curl -k --location --output mlat-client.tar.gz "https://github.com/TheBiggerGuy/mlat-client/archive/${MLAT_CLIENT_VERSION}.tar.gz" && \
     sha256sum mlat-client.tar.gz && echo "${MLAT_CLIENT_HASH}  mlat-client.tar.gz" | sha256sum -c
-run shiv -c fa-mlat-client -o /usr/local/bin/fa-mlat-client /mlat-client.tar.gz
-
+RUN shiv --python='/usr/bin/env python3' -c fa-mlat-client -o /usr/local/bin/fa-mlat-client /mlat-client.tar.gz
+RUN head -n 1 /usr/local/bin/mlat-client
 
 # piaware #####################################################################
 FROM builder-base as piaware
