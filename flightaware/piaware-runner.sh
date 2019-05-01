@@ -20,16 +20,19 @@ echo
 if [ -z "${FLIGHTAWARE_USERNAME}" ]; then
     echo "No FLIGHTAWARE_USERNAME set"
 else
+    echo 'Setting "piaware-config flightaware-user"'
     piaware-config "flightaware-user" "${FLIGHTAWARE_USERNAME}"
 fi
 if [ -z "${FLIGHTAWARE_PASSWORD}" ]; then
     echo "No FLIGHTAWARE_PASSWORD set"
 else
+    echo 'Setting "piaware-config flightaware-password"'
     piaware-config "flightaware-password" "${FLIGHTAWARE_PASSWORD}"
 fi
 if [ -z "${FLIGHTAWARE_FEEDER_ID}" ]; then
     echo "No FLIGHTAWARE_FEEDER_ID set"
 else
+    echo 'Setting "piaware-config feeder-id"'
     piaware-config "feeder-id" "${FLIGHTAWARE_FEEDER_ID}"
 fi
 
@@ -38,6 +41,7 @@ fi
 # This causes issues with extracting to ~/.shiv (the default) so use /tmp instead.
 export SHIV_ROOT='/tmp'
 
+echo 'Starting piaware...'
 piaware -plainlog
 
 exit ${?}
