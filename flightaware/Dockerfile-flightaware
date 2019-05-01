@@ -29,9 +29,10 @@ FROM builder-base as tcllauncher
 ARG TCLLAUNCHER_VERSION
 ARG TCLLAUNCHER_HASH
 
-RUN apt-get install -y --no-install-recommends tcl8.6-dev
+RUN apt-get install -y --no-install-recommends tcl8.6-dev curl ca-certificates
 
-RUN curl --verbose --location --output tcllauncher.tar.gz "https://github.com/flightaware/tcllauncher/archive/${TCLLAUNCHER_VERSION}.tar.gz" && \
+RUN curl -vv --location --output tcllauncher.tar.gz "https://github.com/flightaware/tcllauncher/archive/${TCLLAUNCHER_VERSION}.tar.gz"
+RUN curl --location --output tcllauncher.tar.gz "https://github.com/flightaware/tcllauncher/archive/${TCLLAUNCHER_VERSION}.tar.gz" && \
     sha256sum tcllauncher.tar.gz && echo "${TCLLAUNCHER_HASH}  tcllauncher.tar.gz" | sha256sum -c
 RUN mkdir tcllauncher && cd tcllauncher && \
     tar -xvf ../tcllauncher.tar.gz --strip-components=1
