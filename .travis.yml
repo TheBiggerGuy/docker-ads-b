@@ -53,6 +53,7 @@ before_install:
 script:
   - TAG="${TRAVIS_BRANCH}"
     docker-compose build
+      --pull
       --build-arg VCS_REF=$(git rev-parse --short HEAD)
       "${SUB_IMAGE}"
 
