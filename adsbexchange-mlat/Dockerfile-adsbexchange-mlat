@@ -13,12 +13,14 @@ ARG MLAT_CLIENT_HASH
 
 RUN curl --output mlat-client.tar.gz -L "https://github.com/TheBiggerGuy/mlat-client/archive/${MLAT_CLIENT_VERSION}.tar.gz" && \
     sha256sum mlat-client.tar.gz && echo "${MLAT_CLIENT_HASH}  mlat-client.tar.gz" | sha256sum -c
-run shiv -c mlat-client -o /usr/local/bin/mlat-client /mlat-client.tar.gz
+RUN shiv --python='/usr/bin/env python3' -c mlat-client -o /usr/local/bin/mlat-client /mlat-client.tar.gz
+RUN head -n 1 /usr/local/bin/mlat-client
 
 FROM base
 
 COPY --from=builder /usr/local/bin/mlat-client /usr/local/bin/mlat-client
 COPY mlat-client-runner.sh /usr/bin/mlat-client-runner
+RUN SHIV_ROOT='/tmp' mlat-client -h
 
 EXPOSE 30104/tcp
 
@@ -33,3 +35,4 @@ LABEL maintainer="adsb@thebiggerguy.net" \
       org.label-schema.vcs-ref="${VCS_REF}" \
       org.label-schema.vcs-url="https://github.com/TheBiggerGuy/docker-ads-b" \
       org.label-schema.schema-version="1.0"
+
