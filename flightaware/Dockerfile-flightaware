@@ -1,3 +1,6 @@
+# In general this should mirror the "sensible-build.sh" from
+# https://github.com/flightaware/piaware_builder/releases
+
 # base ########################################################################
 FROM multiarch/debian-debootstrap:armhf-buster-slim as base
 
@@ -28,7 +31,7 @@ ARG TCLLAUNCHER_HASH
 
 RUN apt-get install -y --no-install-recommends tcl8.6-dev
 
-RUN curl --output tcllauncher.tar.gz -L "https://github.com/flightaware/tcllauncher/archive/${TCLLAUNCHER_VERSION}.tar.gz" && \
+RUN curl --verbose --location --output tcllauncher.tar.gz "https://github.com/flightaware/tcllauncher/archive/${TCLLAUNCHER_VERSION}.tar.gz" && \
     sha256sum tcllauncher.tar.gz && echo "${TCLLAUNCHER_HASH}  tcllauncher.tar.gz" | sha256sum -c
 RUN mkdir tcllauncher && cd tcllauncher && \
     tar -xvf ../tcllauncher.tar.gz --strip-components=1
@@ -73,7 +76,7 @@ FROM builder-base as piaware
 #COPY --from=tcllauncher /usr/lib/Tcllauncher1.6/tcllauncher.tcl /usr/lib/Tcllauncher1.6/tcllauncher.tcl
 #COPY --from=tcllauncher /usr/lib/Tcllauncher1.6/tcllauncher-support.tcl /usr/lib/Tcllauncher1.6/tcllauncher-support.tcl
 # TODO: Version number from TCLLAUNCHER_VERSION
-COPY --from=tcllauncher /usr/lib/Tcllauncher1.6 /usr/lib/Tcllauncher1.6
+COPY --from=tcllauncher /usr/lib/Tcllauncher1.8 /usr/lib/Tcllauncher1.8
 COPY --from=tcllauncher /usr/bin/tcllauncher /usr/bin/tcllauncher
 COPY --from=tcllauncher /opt/tcl /opt/tcl
 
@@ -93,7 +96,7 @@ RUN ls /usr/lib/pi* /usr/bin/pi*
 # final image #################################################################
 FROM base
 
-COPY --from=tcllauncher /usr/lib/Tcllauncher1.6 /usr/lib/Tcllauncher1.6
+COPY --from=tcllauncher /usr/lib/Tcllauncher1.8 /usr/lib/Tcllauncher1.8
 
 COPY --from=piaware /usr/bin/piaware /usr/bin/piaware
 COPY --from=piaware /usr/lib/piaware /usr/lib/piaware
@@ -108,7 +111,7 @@ COPY --from=piaware /usr/lib/piaware-status /usr/lib/piaware-status
 #COPY --from=piaware /usr/lib/pirehose /usr/lib/pirehose
 
 COPY --from=piaware /usr/lib/piaware_packages /usr/lib/piaware_packages
-#COPY --from=piaware /usr/lib/fa_adept_codec /usr/lib/fa_adept_codec
+COPY --from=piaware /usr/lib/fa_adept_codec /usr/lib/fa_adept_codec
 
 COPY --from=faup1090 /faup1090/faup1090 /usr/lib/piaware/helpers/faup1090
 
