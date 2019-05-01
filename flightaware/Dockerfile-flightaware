@@ -29,10 +29,10 @@ FROM builder-base as tcllauncher
 ARG TCLLAUNCHER_VERSION
 ARG TCLLAUNCHER_HASH
 
-RUN apt-get install -y --no-install-recommends tcl8.6-dev curl ca-certificates
+RUN apt-get install -y --no-install-recommends tcl8.6-dev
 
-RUN curl -vv --location --output tcllauncher.tar.gz "https://github.com/flightaware/tcllauncher/archive/${TCLLAUNCHER_VERSION}.tar.gz"
-RUN curl --location --output tcllauncher.tar.gz "https://github.com/flightaware/tcllauncher/archive/${TCLLAUNCHER_VERSION}.tar.gz" && \
+# TODO: Fix curl/Travis/GitHub SLL failure. The SHA256 checks will maintain security until this is fixed.
+RUN curl -k --location --output tcllauncher.tar.gz "https://github.com/flightaware/tcllauncher/archive/${TCLLAUNCHER_VERSION}.tar.gz" && \
     sha256sum tcllauncher.tar.gz && echo "${TCLLAUNCHER_HASH}  tcllauncher.tar.gz" | sha256sum -c
 RUN mkdir tcllauncher && cd tcllauncher && \
     tar -xvf ../tcllauncher.tar.gz --strip-components=1
@@ -49,7 +49,8 @@ FROM builder-base as faup1090
 ARG FAUP1090_VERSION
 ARG FAUP1090_HASH
 
-RUN curl --output faup1090.tar.gz -L "https://github.com/flightaware/dump1090/archive/${FAUP1090_VERSION}.tar.gz" && \
+# TODO: Fix curl/Travis/GitHub SLL failure. The SHA256 checks will maintain security until this is fixed.
+RUN curl -k --location --output faup1090.tar.gz "https://github.com/flightaware/dump1090/archive/${FAUP1090_VERSION}.tar.gz" && \
     sha256sum faup1090.tar.gz && echo "${FAUP1090_HASH}  faup1090.tar.gz" | sha256sum -c
 RUN mkdir faup1090 && cd faup1090 && \
     tar -xvf ../faup1090.tar.gz --strip-components=1
@@ -66,7 +67,8 @@ RUN pip3 install --upgrade shiv importlib-resources==0.8
 ARG MLAT_CLIENT_VERSION
 ARG MLAT_CLIENT_HASH
 
-RUN curl --output mlat-client.tar.gz -L "https://github.com/TheBiggerGuy/mlat-client/archive/${MLAT_CLIENT_VERSION}.tar.gz" && \
+# TODO: Fix curl/Travis/GitHub SLL failure. The SHA256 checks will maintain security until this is fixed.
+RUN curl -k --location --output mlat-client.tar.gz "https://github.com/TheBiggerGuy/mlat-client/archive/${MLAT_CLIENT_VERSION}.tar.gz" && \
     sha256sum mlat-client.tar.gz && echo "${MLAT_CLIENT_HASH}  mlat-client.tar.gz" | sha256sum -c
 run shiv -c fa-mlat-client -o /usr/local/bin/fa-mlat-client /mlat-client.tar.gz
 
@@ -84,7 +86,8 @@ COPY --from=tcllauncher /opt/tcl /opt/tcl
 ARG PIAWARE_VERSION
 ARG PIAWARE_HASH
 
-RUN curl --output piaware.tar.gz -L "https://github.com/flightaware/piaware/archive/${PIAWARE_VERSION}.tar.gz" && \
+# TODO: Fix curl/Travis/GitHub SLL failure. The SHA256 checks will maintain security until this is fixed.
+RUN curl -k --location --output piaware.tar.gz "https://github.com/flightaware/piaware/archive/${PIAWARE_VERSION}.tar.gz" && \
     sha256sum piaware.tar.gz && echo "${PIAWARE_HASH}  piaware.tar.gz" | sha256sum -c
 RUN mkdir piaware && cd piaware && \
     tar -xvf ../piaware.tar.gz --strip-components=1
@@ -122,6 +125,8 @@ COPY piaware.conf /etc/piaware.conf
 COPY piaware-runner.sh /usr/bin/piaware-runner
 
 EXPOSE 30105/tcp
+
+# HEALTHCHECK --start-period=1m --interval=30s --timeout=5s --retries=3 CMD curl --fail http://localhost:30105/ || exit 1
 
 ENTRYPOINT ["piaware-runner"]
 
