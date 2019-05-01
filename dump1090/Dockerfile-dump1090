@@ -22,10 +22,10 @@ ARG DUMP1090_GIT_HASH
 ARG DUMP1090_TAR_HASH
 
 
-RUN curl -L --output 'dump1090-mutability.tar.gz' "https://github.com/mutability/dump1090/archive/${DUMP1090_GIT_HASH}.tar.gz" && \
-    sha256sum dump1090-mutability.tar.gz && echo "${DUMP1090_TAR_HASH}  dump1090-mutability.tar.gz" | sha256sum -c
+RUN curl -L --output 'dump1090-flightaware.tar.gz' "https://github.com/flightaware/dump1090/archive/${DUMP1090_GIT_HASH}.tar.gz" && \
+    sha256sum dump1090-flightaware.tar.gz && echo "${DUMP1090_TAR_HASH}  dump1090-flightaware.tar.gz" | sha256sum -c
 RUN mkdir dump1090 && cd dump1090 && \
-    tar -xvf ../dump1090-mutability.tar.gz --strip-components=1
+    tar -xvf ../dump1090-flightaware.tar.gz --strip-components=1
 WORKDIR dump1090
 RUN make DUMP1090_VERSION="${DUMP1090_VERSION}"
 RUN make test
