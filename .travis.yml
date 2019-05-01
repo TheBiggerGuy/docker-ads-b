@@ -1,4 +1,7 @@
-sudo: required
+# Build, test and deploy website via Travis
+
+os: linux
+dist: xenial
 language: generic
 
 branches:
@@ -16,7 +19,7 @@ services:
 
 env:
   global:
-    - DOCKER_COMPOSE_VERSION=1.21.2
+    - DOCKER_COMPOSE_VERSION=1.24.0
 
 matrix:
   include:
