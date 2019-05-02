@@ -65,6 +65,7 @@ FROM base
 COPY --from=builder /vrs /opt/vrs
 
 COPY InstallerConfiguration.xml /root/.local/share/VirtualRadar/InstallerConfiguration.xml
+COPY Configuration.xml /root/.local/share/VirtualRadar/Configuration.xml
 COPY vrs-runner.sh /usr/local/bin/vrs-runner
 
 EXPOSE 30053
