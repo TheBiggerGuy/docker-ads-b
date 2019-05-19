@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <DataVersion>9</DataVersion>
+  <DataVersion>1</DataVersion>
   <BaseStationSettings>
     <ConnectionType>TCP</ConnectionType>
     <AutoReconnectAtStartup>false</AutoReconnectAtStartup>
@@ -34,7 +34,6 @@
     <BasicAuthenticationUserIds />
     <AdministratorUserIds>
       <string>1</string>
-      <string>1</string>
     </AdministratorUserIds>
     <EnableUPnp>false</EnableUPnp>
     <UPnpPort>80</UPnpPort>
@@ -57,9 +56,9 @@
     <EnableBundling>true</EnableBundling>
     <EnableMinifying>true</EnableMinifying>
     <EnableCompression>true</EnableCompression>
-    <WebSiteReceiverId>3</WebSiteReceiverId>
-    <ClosestAircraftReceiverId>3</ClosestAircraftReceiverId>
-    <FlightSimulatorXReceiverId>3</FlightSimulatorXReceiverId>
+    <WebSiteReceiverId>4</WebSiteReceiverId>
+    <ClosestAircraftReceiverId>4</ClosestAircraftReceiverId>
+    <FlightSimulatorXReceiverId>4</FlightSimulatorXReceiverId>
     <ProxyType>Unknown</ProxyType>
     <EnableCorsSupport>false</EnableCorsSupport>
     <UseGoogleMapsAPIKeyWithLocalRequests>false</UseGoogleMapsAPIKeyWithLocalRequests>
@@ -80,7 +79,7 @@
     <CanShowPolarPlots>false</CanShowPolarPlots>
   </InternetClientSettings>
   <AudioSettings>
-    <Enabled>true</Enabled>
+    <Enabled>false</Enabled>
     <VoiceRate>0</VoiceRate>
   </AudioSettings>
   <RawDecodingSettings>
@@ -163,19 +162,51 @@
       <ReceiverLocationId>1</ReceiverLocationId>
       <ReceiverUsage>Normal</ReceiverUsage>
     </Receiver>
+    <Receiver>
+      <Enabled>true</Enabled>
+      <UniqueId>3</UniqueId>
+      <Name>flightaware-mlat</Name>
+      <DataSource>Beast</DataSource>
+      <ConnectionType>TCP</ConnectionType>
+      <AutoReconnectAtStartup>true</AutoReconnectAtStartup>
+      <IsSatcomFeed>false</IsSatcomFeed>
+      <IsPassive>false</IsPassive>
+      <Access>
+        <DefaultAccess>Unrestricted</DefaultAccess>
+        <Addresses />
+      </Access>
+      <Address>FLIGHTAWARE_MLAT_SERVER</Address>
+      <Port>FLIGHTAWARE_MLAT_PORT</Port>
+      <UseKeepAlive>true</UseKeepAlive>
+      <IdleTimeoutMilliseconds>60000</IdleTimeoutMilliseconds>
+      <BaudRate>115200</BaudRate>
+      <DataBits>8</DataBits>
+      <StopBits>One</StopBits>
+      <Parity>None</Parity>
+      <Handshake>None</Handshake>
+      <StartupText>#43-02\r</StartupText>
+      <ShutdownText>#43-00\r</ShutdownText>
+      <ReceiverLocationId>1</ReceiverLocationId>
+      <ReceiverUsage>Normal</ReceiverUsage>
+    </Receiver>
   </Receivers>
   <MergedFeeds>
     <MergedFeed>
       <Enabled>true</Enabled>
-      <UniqueId>3</UniqueId>
+      <UniqueId>4</UniqueId>
       <Name>Merged Feed</Name>
       <ReceiverIds>
         <int>1</int>
         <int>2</int>
+        <int>3</int>
       </ReceiverIds>
       <ReceiverFlags>
         <MergedFeedReceiver>
           <UniqueId>2</UniqueId>
+          <IsMlatFeed>true</IsMlatFeed>
+        </MergedFeedReceiver>
+        <MergedFeedReceiver>
+          <UniqueId>3</UniqueId>
           <IsMlatFeed>true</IsMlatFeed>
         </MergedFeedReceiver>
       </ReceiverFlags>

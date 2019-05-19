@@ -6,7 +6,7 @@ RUN apt-get update && \
     echo 'deb https://download.mono-project.com/repo/debian stable-stretch main' | tee /etc/apt/sources.list.d/mono-official-stable.list && \
     apt-get remove --purge --autoremove -y gnupg dirmngr && \
     apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends curl ca-certificates iputils-ping \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends curl ca-certificates iputils-ping sqlite3 \
         mono-runtime \
         cli-common \
         binfmt-support \
