@@ -6,7 +6,7 @@ RUN apt-get update && \
     echo 'deb https://download.mono-project.com/repo/debian stable-stretch main' | tee /etc/apt/sources.list.d/mono-official-stable.list && \
     apt-get remove --purge --autoremove -y gnupg dirmngr && \
     apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends curl ca-certificates iputils-ping \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends curl ca-certificates iputils-ping sqlite3 \
         mono-runtime \
         cli-common \
         binfmt-support \
@@ -65,6 +65,7 @@ FROM base
 COPY --from=builder /vrs /opt/vrs
 
 COPY InstallerConfiguration.xml /root/.local/share/VirtualRadar/InstallerConfiguration.xml
+COPY Configuration.xml /root/.local/share/VirtualRadar/Configuration.xml
 COPY vrs-runner.sh /usr/local/bin/vrs-runner
 
 EXPOSE 30053

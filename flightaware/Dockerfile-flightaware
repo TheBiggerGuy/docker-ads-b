@@ -126,7 +126,7 @@ COPY piaware-runner.sh /usr/bin/piaware-runner
 
 EXPOSE 30105/tcp
 
-# HEALTHCHECK --start-period=1m --interval=30s --timeout=5s --retries=3 CMD curl --fail http://localhost:30105/ || exit 1
+HEALTHCHECK --start-period=1m --interval=30s --timeout=5s --retries=3 CMD piaware-status | grep -F 'piaware is connected to FlightAware.' > /dev/null; if [ 0 != $? ]; then exit 1; fi;
 
 ENTRYPOINT ["piaware-runner"]
 
