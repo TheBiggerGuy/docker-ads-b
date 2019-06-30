@@ -85,3 +85,11 @@ Nothing to configure here
 * https://hub.docker.com/r/thebiggerguy/docker-ads-b-openskynetwork/
 * https://hub.docker.com/r/thebiggerguy/docker-ads-b-planefinder/
 * https://hub.docker.com/r/thebiggerguy/docker-ads-b-virtualradar/
+
+# Development
+
+## x86
+When developing on non ARM architectures you may need to configure your system to use Qemu. This can be done by running the following commands:
+```bash
+docker run --rm --privileged multiarch/qemu-user-static:register --reset
+```
