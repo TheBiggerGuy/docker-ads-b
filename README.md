@@ -50,7 +50,7 @@ Nothing to configure here
 ### variables-adsbhub.env
 Nothing to configure here
 
-## variables-flightware.env
+### variables-flightware.env
 Go to https://flightaware.com/adsb/piaware/claim
 * FLIGHTAWARE_USERNAME
 * FLIGHTAWARE_PASSWORD
