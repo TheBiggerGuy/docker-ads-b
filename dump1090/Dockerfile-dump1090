@@ -3,9 +3,9 @@ FROM multiarch/alpine:armhf-v3.9 as base
 
 RUN cat /etc/apk/repositories && \
     echo '@edge http://nl.alpinelinux.org/alpine/edge/main' >> /etc/apk/repositories && \
-    echo '@testing http://nl.alpinelinux.org/alpine/edge/testing' >> /etc/apk/repositories && \
+    echo '@community http://nl.alpinelinux.org/alpine/edge/community' >> /etc/apk/repositories && \
     cat /etc/apk/repositories && \
-    apk add --no-cache tini librtlsdr@testing libusb
+    apk add --no-cache tini librtlsdr@edge libusb
 
 
 # Builder Image ###############################################################
@@ -14,7 +14,7 @@ FROM base as builder
 RUN apk add --no-cache \
         curl ca-certificates \
         coreutils make gcc pkgconf \
-        libc-dev librtlsdr-dev@testing libusb-dev
+        libc-dev librtlsdr-dev@edge libusb-dev
 
 
 ARG DUMP1090_VERSION
