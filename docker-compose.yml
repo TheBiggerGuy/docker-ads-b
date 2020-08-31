@@ -203,7 +203,7 @@ services:
       #  - thebiggerguy/docker-ads-b-virtualradar
       #  - thebiggerguy/docker-ads-b-virtualradar:${TAG:-latest}
       args:
-        VIRTUALRADAR_HASH: 86a0c2d2c1141492a01b4832a58e919a90e749391d2591d248a962dacb315ea9
+        VIRTUALRADAR_HASH: b3d956b4e049c97b4fec93452ac5ad14225b3e9b732ed62aeceb1e6cf5b24344
         VIRTUALRADAR_WEBADMINPLUGIN_HASH: affa6a92d0454109f5d39d32888a208dee547fb30871719f5ba5ceca2bedf215  
     ports:
       - "0.0.0.0:8080:8080/tcp"
