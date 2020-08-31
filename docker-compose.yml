@@ -45,8 +45,8 @@ services:
         - thebiggerguy/docker-ads-b-flightradar24
         - thebiggerguy/docker-ads-b-flightradar24:${TAG:-latest}
       args:
-        FR24FEED_VERSION: 1.0.24-1
-        FR24FEED_HASH: 86538bd46469d529e98e94c5c5483a1a8f9abb7d55048c882434ea598a498814
+        FR24FEED_VERSION: 1.0.25-3
+        FR24FEED_HASH: 16ca9d5139eb1bc2dcabcd73611cde049b96392a411f3f4ead3157e676b4bc93
     ports:
       - "8754:8754/tcp"
     depends_on:
@@ -203,7 +203,7 @@ services:
       #  - thebiggerguy/docker-ads-b-virtualradar
       #  - thebiggerguy/docker-ads-b-virtualradar:${TAG:-latest}
       args:
-        VIRTUALRADAR_HASH: 86a0c2d2c1141492a01b4832a58e919a90e749391d2591d248a962dacb315ea9
+        VIRTUALRADAR_HASH: b3d956b4e049c97b4fec93452ac5ad14225b3e9b732ed62aeceb1e6cf5b24344
         VIRTUALRADAR_WEBADMINPLUGIN_HASH: affa6a92d0454109f5d39d32888a208dee547fb30871719f5ba5ceca2bedf215  
     ports:
       - "0.0.0.0:8080:8080/tcp"
