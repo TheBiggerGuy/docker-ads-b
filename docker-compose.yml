@@ -219,3 +219,19 @@ services:
         limits:
           cpus: '0.75'
           memory: 512M
+
+  # duckdns ###################################################################
+  duckdns:
+    image: thebiggerguy/docker-ads-b-duckdns:${TAG:-latest}
+    build:
+      context: duckdns
+      dockerfile: Dockerfile-duckdns
+      #cache_from:
+      #  - thebiggerguy/docker-ads-b-duckdns
+      #  - thebiggerguy/docker-ads-b-duckdns:${TAG:-latest} 
+    env_file:
+      - variables-duckdns.env
+    deploy:
+      restart_policy:
+        condition: always
+        delay: 5s
