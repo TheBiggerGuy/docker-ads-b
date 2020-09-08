@@ -1,9 +1,9 @@
 FROM multiarch/alpine:armhf-v3.9
 
-RUN apk add --no-cache socat iputils
+RUN apk add --no-cache socat iputils bash
 
-COPY adsbhub-client.sh /usr/local/bin/adsbhub-client
-ENTRYPOINT ["adsbhub-client"]
+COPY adsbhub.sh /usr/bin/adsbhub.sh
+ENTRYPOINT ["adsbhub.sh"]
 
 # Metadata
 ARG VCS_REF="Unknown"
